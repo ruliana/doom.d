@@ -1,0 +1,20 @@
+# key: stage
+# name: class Stage(TransformStage)
+# --
+class $1(TransformStage):
+    """
+    What does this stage do?
+    """
+
+    INPUTS = {
+        'some_dataset': Contract({
+            'a_field': {'type': StringType()},
+        }),
+    }
+
+    OUTPUT = Contract({
+        'another_field': {'type': StringType()},
+    })
+
+    def apply(self, some_dataset):
+        pass

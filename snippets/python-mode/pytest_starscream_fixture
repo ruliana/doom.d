@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: @pytest.fixture... def <fixture name>...
+# key: fixture
+# --
+@pytest.fixture
+def $1(sc):
+return DataTemplate(sc, $2.OUTPUT, {
+  '$3': $4,
+  $0
+})

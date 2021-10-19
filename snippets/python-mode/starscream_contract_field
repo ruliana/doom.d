@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Starscream contract field
+# key: cf
+# --
+'$1': {'type': ${2:$$(yas-choose-value '("Long" "String" "Timestamp" "Date"))}Type()${3:$$(yas-choose-value '("\}" ",'nullable': True\}"))},
+$0

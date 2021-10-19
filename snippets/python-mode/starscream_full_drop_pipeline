@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: Full drop pipeline
+# key: pipeline
+# --
+
+pipeline = FactPipeline(
+    name='${0:Pipeline Title}',
+    stages=[
+        ${1:StageClassName}(),
+    ],
+    inputs={
+        '${2:dataframe_name}': {'filter': False, 'type': 'dataframe'},
+    })
+
+if __name__ == '__main__':
+    pipeline.main()

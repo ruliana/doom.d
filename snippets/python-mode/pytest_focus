@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Pytest focus
+# uuid:
+# key: focus
+# condition: t
+# --
+@pytest.mark.focus

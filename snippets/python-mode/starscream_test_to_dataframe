@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Starscream test to dataframe
+# key: ttdf
+# --
+$1 = $1.to_dataframe([{}])

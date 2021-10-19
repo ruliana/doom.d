@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: class TestSomething...
+# key: testclass
+# --
+class Test$1(object):
+    def test_apply_default_fixture_is_valid(self, input_fixture, output_fixture):
+        input_fixture = input_fixture.to_dataframe([{}])
+
+        expected = output_fixture.to_dicts([{}])
+
+        actual = as_dicts($1().apply(input_fixture))
+
+        assert sorted(actual) == sorted(expected)
