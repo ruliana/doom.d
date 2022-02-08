@@ -96,6 +96,13 @@
       ;; Global substitution is more common, so make it default
       evil-ex-substitute-global t)
 
+(setq hippie-expand-try-functions-list
+  '(try-complete-file-name-partially
+     try-complete-file-name
+     try-expand-all-abbrevs
+     try-expand-dabbrev
+     try-expand-dabbrev-all-buffers
+     try-expand-dabbrev-from-kill))
 
 ;;==================================================
 ;; Package configuration
@@ -130,6 +137,11 @@
 (use-package! py-yapf
   :after python)
 
+(use-package! factor-mode
+  :init
+  (setq fuel-listener-factor-binary "~/Workspace/factor/factor")
+  (setq fuel-listener-factor-image "~/Workspace/factor/factor.image"))
+
 ;; Shadowenv is a Shopify package to overwrite env variable depending on buffer.
 ;; Doesn't seem to work here.
 (use-package! shadowenv
@@ -140,19 +152,21 @@
 ;;   (let* ((json-array-type 'vector)
 ;;          (json-key-type 'string)
 ;;          (json-object-type 'hash-table)
-;;          (paths (shell-command-to-string (concat "source " venv-path "/bin/activate"
+;;          (paths (shell-command-to-string (concat "source " venv-path "/bin/activate.fish"
 ;;                                                  "&& python -c \"import sys; import json; print(json.dumps({'paths': sys.path}))\""))))
 ;;     (gethash "paths" (json-read-from-string paths))))
 
 ;; (add-hook 'hack-local-variables-hook
-;;           (lambda ()
-;;             (shadowenv-mode t)
-;;             (when (getenv "VIRTUAL_ENV")
-;;               (setq lsp-python-ms-python-executable-cmd (concat (getenv "VIRTUAL_ENV") "/bin/python")
-;;                     lsp-python-ms-python-executable (concat (getenv "VIRTUAL_ENV") "/bin/python")
-;;                     lsp-python-ms-extra-paths
-;;                     (vconcat (python-config/virtualenv-paths (getenv "VIRTUAL_ENV"))
-;;                              `(,(expand-file-name "~/src/github.com/Shopify/starscream/.dev/starscream/spark/current/python/lib/pyspark.zip")))))))
+;;   (lambda ()
+;;     (shadowenv-mode t)
+;;     ;; Ideally: let ((virtual_env (getenv "VIRTUAL_ENV")))...
+;;     (let ((virtual-env "/Users/ronieuliana/.pyenv/virtualenvs/starscream/2.7.17"))
+;;       (when virtual-env
+;;         (setq lsp-python-ms-python-executable-cmd (concat virtual-env "/bin/python")
+;;           lsp-python-ms-python-executable (concat virtual-env "/bin/python")
+;;           lsp-python-ms-extra-paths
+;;           (vconcat (python-config/virtualenv-paths virtual-env)
+;;             `(,(expand-file-name "~/src/github.com/Shopify/starscream/.dev/starscream/spark/current/python/lib/pyspark.zip"))))))))
 
 ;; Amazing package for change word case
 (use-package! evil-string-inflection
@@ -213,34 +227,35 @@
     ;; need for the extra space.
     (undo-boundary)
     (save-excursion
-      (save-restriction
+      (save-match-data
+        (save-restriction
 
-        ;; Check chars after the pasted text
-        (narrow-to-region end (line-end-position))
-        (goto-char end)
-        (dolist (elt pos-regexes)
-          (let ((regexp (car elt))
-                (replacement (cdr elt)))
-            (when (re-search-forward regexp nil t)
-              (replace-match replacement)
-              (setq rule-applied t))))
+          ;; Check chars after the pasted text
+          (narrow-to-region end (line-end-position))
+          (goto-char end)
+          (dolist (elt pos-regexes)
+            (let ((regexp (car elt))
+                  (replacement (cdr elt)))
+              (when (re-search-forward regexp nil t)
+                (replace-match replacement)
+                (setq rule-applied t))))
 
-        (widen)
+          (widen)
 
-        ;; Check chars before the pasted text
-        (narrow-to-region (line-beginning-position) beg)
-        (goto-char beg)
-        (dolist (elt pre-regexes)
-          (let ((regexp (car elt))
-                (replacement (cdr elt)))
-            (when (re-search-backward regexp nil t)
-              (replace-match replacement)
-              (setq rule-applied t))))
+          ;; Check chars before the pasted text
+          (narrow-to-region (line-beginning-position) beg)
+          (goto-char beg)
+          (dolist (elt pre-regexes)
+            (let ((regexp (car elt))
+                  (replacement (cdr elt)))
+              (when (re-search-backward regexp nil t)
+                (replace-match replacement)
+                (setq rule-applied t))))
 
-        ;; If nothing happened, we remove the useless undo-boundary
-        ;; created at the beginning.
-        (when (not rule-applied)
-          (setq buffer-undo-list (cdr buffer-undo-list)))))))
+          ;; If nothing happened, we remove the useless undo-boundary
+          ;; created at the beginning.
+          (when (not rule-applied)
+            (setq buffer-undo-list (cdr buffer-undo-list))))))))
 
 (setq default-text-properties '(dwim-paste--yank-handle t))
 
